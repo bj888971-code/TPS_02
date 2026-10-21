@@ -3,70 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberDPT - Dashboard Warga Futuristik</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Dashboard Warga & DPT - TPS 02</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter & Orbitron -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        cyber: ['Orbitron', 'sans-serif']
-                    },
-                    colors: {
-                        cyberdark: '#070b19',
-                        cybersurface: '#0f172a',
-                        cybercard: '#1e293b',
-                        cyberaccent: '#06b6d4',
-                        cyberpurple: '#8b5cf6'
-                    }
-                }
-            }
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        .sidebar-active { background: linear-gradient(90deg, rgba(6, 182, 212, 0.15) 0%, rgba(15, 23, 42, 0) 100%); border-left: 4px solid #06b6d4; color: #22d3ee !important; }
-        .cyber-glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .cyber-card { background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
-        .cyber-glow { box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.3); }
-        .cyber-glow-purple { box-shadow: 0 0 25px -5px rgba(139, 92, 246, 0.3); }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #070b19; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
+        :root {
+            --bg-main: #090d16;
+            --bg-surface: #111827;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --border-color: rgba(59, 130, 246, 0.2);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-color: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.3);
+        }
+
+        body[data-theme="neon"] {
+            --bg-main: #05050a;
+            --bg-surface: #0f0f1a;
+            --bg-card: rgba(15, 15, 26, 0.8);
+            --border-color: rgba(236, 72, 153, 0.3);
+            --text-main: #fff1f2;
+            --text-muted: #cbd5e1;
+            --accent-color: #ec4899;
+            --accent-glow: rgba(236, 72, 153, 0.4);
+        }
+
+        body[data-theme="emerald"] {
+            --bg-main: #022c22;
+            --bg-surface: #064e3b;
+            --bg-card: rgba(6, 78, 59, 0.7);
+            --border-color: rgba(52, 211, 153, 0.3);
+            --text-main: #ecfdf5;
+            --text-muted: #a7f3d0;
+            --accent-color: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.4);
+        }
+
+        body[data-theme="sunset"] {
+            --bg-main: #180802;
+            --bg-surface: #2c1206;
+            --bg-card: rgba(44, 18, 6, 0.8);
+            --border-color: rgba(249, 115, 22, 0.3);
+            --text-main: #fff7ed;
+            --text-muted: #fed7aa;
+            --accent-color: #f97316;
+            --accent-glow: rgba(249, 115, 22, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .font-cyber {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .theme-glass {
+            background-color: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+        }
+
+        .sidebar-active {
+            background-color: var(--accent-color) !important;
+            color: #000000 !important;
+            font-weight: 700;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        /* Garis pemisah tebal antar NKK yang berbeda */
+        .border-kk-group {
+            border-bottom: 3px solid var(--accent-color) !important;
+        }
     </style>
 </head>
-<body class="bg-cyberdark font-sans text-slate-100 antialiased selection:bg-cyan-500 selection:text-white">
+<body data-theme="cyber" class="antialiased">
 
+    <!-- TEMPAT PENYEMATAN API URL GOOGLE APPS SCRIPT -->
     <script>
-        // Tempelkan Web App URL dari Google Apps Script di bawah ini:
         const API_URL = "https://script.google.com/macros/s/AKfycbwE193UNQ3EoriLuJ3bfXyST6EluDMiL7BgiMStf698RRpNvMFubCrvkDhUZrQrf5c/exec";
     </script>
 
     <!-- Global Top Cyber Bar -->
-    <div class="cyber-glass text-white flex justify-between items-center px-4 py-3 sticky top-0 z-40 border-b border-slate-800">
+    <div class="theme-glass flex justify-between items-center px-4 py-3 sticky top-0 z-40 border-b">
         <div class="flex items-center space-x-3">
-            <button onclick="toggleSidebar()" class="p-2 text-slate-300 hover:text-cyan-400 focus:outline-none transition rounded-xl hover:bg-slate-800/50" title="Sembunyikan/Tampilkan Menu">
-                <i class="fa-solid fa-terminal text-lg text-cyan-400" id="sidebar-toggle-icon"></i>
+            <button onclick="toggleSidebar()" class="p-2 transition rounded-xl hover:bg-white/10" title="Sembunyikan/Tampilkan Menu" style="color: var(--text-muted);">
+                <i class="fa-solid fa-terminal text-lg" style="color: var(--accent-color);" id="sidebar-toggle-icon"></i>
             </button>
             <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg cyber-glow">
-                    <i class="fa-solid fa-cube text-white text-xs"></i>
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center shadow-lg" style="background: var(--accent-color); box-shadow: 0 0 15px var(--accent-glow);">
+                    <i class="fa-solid fa-cube text-slate-950 text-xs font-bold"></i>
                 </div>
-                <span class="font-cyber font-bold tracking-wider text-base md:text-lg bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">CYBER<span class="text-white">DPT</span></span>
+                <span class="font-cyber font-bold tracking-wider text-base md:text-lg" style="color: var(--text-main);">DATA <span style="color: var(--accent-color);">TPS 02</span></span>
             </div>
         </div>
-        <div class="flex items-center space-x-3 px-3 py-1.5 rounded-full bg-slate-900/80 border border-slate-800 text-xs">
-            <div class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" id="sync-dot"></div>
-            <span class="text-slate-400 hidden sm:inline">Node Status:</span> <span id="sync-status" class="text-cyan-400 font-cyber font-semibold tracking-wide">ONLINE</span>
+
+        <!-- Opsi Pemilihan Tema & Status -->
+        <div class="flex items-center space-x-3">
+            <div class="relative">
+                <select id="theme-selector" onchange="changeTheme(this.value)" class="px-3 py-1.5 rounded-xl text-xs font-semibold focus:outline-none transition cursor-pointer" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
+                    <option value="cyber">🤖 Cyber Dark</option>
+                    <option value="neon">⚡ Neon Midnight</option>
+                    <option value="emerald">🌿 Clean Emerald</option>
+                    <option value="sunset">🔥 Sunset Orange</option>
+                </select>
+            </div>
+            <div class="flex items-center space-x-2 px-3 py-1.5 rounded-full text-xs" style="background-color: var(--bg-main); border: 1px solid var(--border-color);">
+                <div class="w-2 h-2 rounded-full animate-pulse" style="background-color: var(--accent-color);" id="sync-dot"></div>
+                <span style="color: var(--text-muted);" class="hidden sm:inline">Status:</span> <span id="sync-status" class="font-cyber font-semibold tracking-wide" style="color: var(--accent-color);">ONLINE</span>
+            </div>
         </div>
     </div>
 
@@ -74,149 +125,122 @@
     <div id="sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-40 hidden md:hidden"></div>
 
     <div class="flex h-[calc(100vh-61px)] overflow-hidden relative">
-        <aside id="sidebar" class="w-72 bg-cybersurface text-white flex flex-col flex-shrink-0 transition-all duration-300 ease-in-out absolute md:relative inset-y-0 left-0 z-50 transform -translate-x-full md:translate-x-0 border-r border-slate-800/80 shadow-2xl">
-            <div class="p-4 border-b border-slate-800/80 flex items-center justify-between">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-72 flex flex-col flex-shrink-0 transition-all duration-300 ease-in-out absolute md:relative inset-y-0 left-0 z-50 transform -translate-x-full md:translate-x-0 shadow-2xl" style="background-color: var(--bg-surface); border-right: 1px solid var(--border-color);">
+            <div class="p-4 flex items-center justify-between" style="border-bottom: 1px solid var(--border-color);">
                 <div class="flex items-center space-x-2">
-                    <i class="fa-solid fa-network-wired text-cyan-400 text-sm"></i>
-                    <span class="text-xs uppercase font-cyber tracking-widest text-slate-400">Navigation Matrix</span>
+                    <i class="fa-solid fa-network-wired text-sm" style="color: var(--accent-color);"></i>
+                    <span class="text-xs uppercase font-cyber tracking-widest" style="color: var(--text-muted);">Navigation Matrix</span>
                 </div>
-                <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white p-1">
+                <button onclick="toggleSidebar()" class="md:hidden p-1" style="color: var(--text-muted);">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
             <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="sidebar-active w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-left transition hover:bg-slate-800/50 text-sm font-medium">
-                    <i class="fa-solid fa-chart-pie w-5 text-cyan-400"></i>
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="sidebar-active w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-left transition hover:bg-white/5 text-sm font-medium" style="color: var(--text-main);">
+                    <i class="fa-solid fa-chart-pie w-5"></i>
                     <span>Dashboard & DPT</span>
                 </button>
-                <button onclick="switchTab('rekap-tps')" id="nav-rekap-tps" class="w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-left transition hover:bg-slate-800/50 text-slate-400 text-sm font-medium">
-                    <i class="fa-solid fa-boxes-stacked w-5 text-purple-400"></i>
+                <button onclick="switchTab('rekap-tps')" id="nav-rekap-tps" class="w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-left transition hover:bg-white/5 text-sm font-medium" style="color: var(--text-muted);">
+                    <i class="fa-solid fa-boxes-stacked w-5"></i>
                     <span>Rekapitulasi TPS</span>
                 </button>
-                <button onclick="switchTab('rekap-rt')" id="nav-rekap-rt" class="w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-left transition hover:bg-slate-800/50 text-slate-400 text-sm font-medium">
-                    <i class="fa-solid fa-map-location-dot w-5 text-emerald-400"></i>
+                <button onclick="switchTab('rekap-rt')" id="nav-rekap-rt" class="w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-left transition hover:bg-white/5 text-sm font-medium" style="color: var(--text-muted);">
+                    <i class="fa-solid fa-map-location-dot w-5"></i>
                     <span>Wilayah & RT</span>
                 </button>
             </nav>
-            <div class="p-4 border-t border-slate-800/80 text-[11px] text-slate-500 text-center font-cyber">
-                SECURE DPT v3.0 // QUANTUM CORE
+            <div class="p-4 text-[11px] text-center font-cyber" style="border-top: 1px solid var(--border-color); color: var(--text-muted);">
+                DATA TPS 02 // SECURE SYSTEM
             </div>
         </aside>
 
-        <main class="flex-1 overflow-y-auto p-4 md:p-8 pb-24 md:pb-8 bg-gradient-to-br from-cyberdark via-[#0a0f1d] to-[#070b19]">
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-8 pb-24 md:pb-8">
             
             <!-- TAB 1: DASHBOARD & DATA DPT -->
-            <div id="tab-dashboard" class="space-y-6 max-w-7xl mx-auto">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div id="tab-dashboard" class="space-y-6">
+                <div class="flex justify-between items-center flex-wrap gap-4">
                     <div>
-                        <h1 class="text-2xl md:text-3xl font-cyber font-extrabold text-white tracking-tight flex items-center gap-3">
-                            <span class="w-3 h-3 rounded-full bg-cyan-400 animate-ping"></span>
-                            Database Warga & DPT
-                        </h1>
-                        <p class="text-slate-400 text-xs md:text-sm mt-1">Sistem manajemen pemilih terintegrasi dengan pemetaan TPS, RT, dan No Urut KK cerdas.</p>
+                        <h1 class="text-2xl md:text-3xl font-bold font-cyber tracking-tight" style="color: var(--text-main);">Dashboard Data Warga & DPT</h1>
+                        <p class="text-xs md:text-sm" style="color: var(--text-muted);">Kelola data pemilih, lokasi RT, TPS, dan No Urut KK secara terintegrasi.</p>
                     </div>
-                    <div class="flex items-center space-x-3 w-full md:w-auto">
-                        <button onclick="fetchDataFromSheet()" class="flex-1 md:flex-none bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-cyan-500/30 px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold flex items-center justify-center space-x-2 shadow-lg transition active:scale-95">
+                    <div class="flex space-x-2">
+                        <button onclick="fetchDataFromSheet()" class="px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold flex items-center space-x-2 transition hover:opacity-90 shadow-lg" style="background-color: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border-color);">
                             <i class="fa-solid fa-rotate"></i>
-                            <span>Sync Data</span>
+                            <span>Refresh</span>
                         </button>
-                        <button onclick="openModal()" class="flex-1 md:flex-none bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold flex items-center justify-center space-x-2 shadow-lg cyber-glow transition active:scale-95">
-                            <i class="fa-solid fa-user-plus"></i>
+                        <button onclick="openModal()" class="px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold flex items-center space-x-2 transition shadow-lg" style="background-color: var(--accent-color); color: #000; box-shadow: 0 0 15px var(--accent-glow);">
+                            <i class="fa-solid fa-plus"></i>
                             <span>Tambah Warga</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- KPI Futuristic Cards -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
-                    <div class="cyber-card p-4 md:p-5 rounded-2xl relative overflow-hidden group hover:border-cyan-500/50 transition">
-                        <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-cyan-500/10 rounded-full blur-xl group-hover:bg-cyan-500/20 transition"></div>
-                        <div class="text-[11px] md:text-xs font-cyber font-semibold text-cyan-400 uppercase tracking-widest">Total DPT</div>
-                        <div id="kpi-total" class="text-2xl md:text-4xl font-extrabold font-cyber text-white mt-2">0</div>
-                        <div class="text-[10px] text-slate-400 mt-1 flex items-center gap-1"><i class="fa-solid fa-users text-cyan-400"></i> Terdaftar aktif</div>
+                <!-- KPI Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="theme-glass p-5 rounded-2xl shadow-xl relative overflow-hidden">
+                        <div class="text-[11px] font-cyber uppercase tracking-wider" style="color: var(--text-muted);">Total DPT / Warga</div>
+                        <div id="kpi-total" class="text-3xl md:text-4xl font-extrabold mt-2 font-cyber" style="color: var(--text-main);">0</div>
+                        <div class="absolute -right-4 -bottom-4 opacity-15 text-5xl"><i class="fa-solid fa-users"></i></div>
                     </div>
-                    <div class="cyber-card p-4 md:p-5 rounded-2xl relative overflow-hidden group hover:border-blue-500/50 transition">
-                        <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-blue-500/10 rounded-full blur-xl group-hover:bg-blue-500/20 transition"></div>
-                        <div class="text-[11px] md:text-xs font-cyber font-semibold text-blue-400 uppercase tracking-widest">Wilayah RT</div>
-                        <div id="kpi-rt" class="text-2xl md:text-4xl font-extrabold font-cyber text-white mt-2">0</div>
-                        <div class="text-[10px] text-slate-400 mt-1 flex items-center gap-1"><i class="fa-solid fa-house-chimney text-blue-400"></i> RT Domisili</div>
+                    <div class="theme-glass p-5 rounded-2xl shadow-xl relative overflow-hidden">
+                        <div class="text-[11px] font-cyber uppercase tracking-wider" style="color: var(--text-muted);">Jumlah RT Domisili</div>
+                        <div id="kpi-rt" class="text-3xl md:text-4xl font-extrabold mt-2 font-cyber" style="color: var(--accent-color);">0</div>
+                        <div class="absolute -right-4 -bottom-4 opacity-15 text-5xl"><i class="fa-solid fa-house-chimney"></i></div>
                     </div>
-                    <div class="cyber-card p-4 md:p-5 rounded-2xl relative overflow-hidden group hover:border-emerald-500/50 transition">
-                        <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-emerald-500/10 rounded-full blur-xl group-hover:bg-emerald-500/20 transition"></div>
-                        <div class="text-[11px] md:text-xs font-cyber font-semibold text-emerald-400 uppercase tracking-widest">Total TPS</div>
-                        <div id="kpi-tps" class="text-2xl md:text-4xl font-extrabold font-cyber text-white mt-2">0</div>
-                        <div class="text-[10px] text-slate-400 mt-1 flex items-center gap-1"><i class="fa-solid fa-check-to-slot text-emerald-400"></i> Titik TPS</div>
+                    <div class="theme-glass p-5 rounded-2xl shadow-xl relative overflow-hidden">
+                        <div class="text-[11px] font-cyber uppercase tracking-wider" style="color: var(--text-muted);">Jumlah TPS</div>
+                        <div id="kpi-tps" class="text-3xl md:text-4xl font-extrabold mt-2 font-cyber text-emerald-400">0</div>
+                        <div class="absolute -right-4 -bottom-4 opacity-15 text-5xl"><i class="fa-solid fa-box-archive"></i></div>
                     </div>
-                    <div class="cyber-card p-4 md:p-5 rounded-2xl relative overflow-hidden group hover:border-purple-500/50 transition">
-                        <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-purple-500/10 rounded-full blur-xl group-hover:bg-purple-500/20 transition"></div>
-                        <div class="text-[11px] md:text-xs font-cyber font-semibold text-purple-400 uppercase tracking-widest">Kepala Keluarga</div>
-                        <div id="kpi-kk" class="text-2xl md:text-4xl font-extrabold font-cyber text-white mt-2">0</div>
-                        <div class="text-[10px] text-slate-400 mt-1 flex items-center gap-1"><i class="fa-solid fa-id-card text-purple-400"></i> Kartu Keluarga</div>
+                    <div class="theme-glass p-5 rounded-2xl shadow-xl relative overflow-hidden">
+                        <div class="text-[11px] font-cyber uppercase tracking-wider" style="color: var(--text-muted);">Jumlah Kepala Keluarga</div>
+                        <div id="kpi-kk" class="text-3xl md:text-4xl font-extrabold mt-2 font-cyber text-amber-400">0</div>
+                        <div class="absolute -right-4 -bottom-4 opacity-15 text-5xl"><i class="fa-solid fa-id-card"></i></div>
                     </div>
                 </div>
 
-                <div class="cyber-card p-4 md:p-6 rounded-2xl space-y-4">
-                    <div class="flex items-center justify-between">
-                        <div class="text-xs font-cyber font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
-                            <i class="fa-solid fa-sliders"></i> Filter Matrix & Pencarian Spesifik
-                        </div>
-                        <button onclick="resetFilters()" class="text-xs text-slate-400 hover:text-cyan-400 font-semibold flex items-center space-x-1 transition">
-                            <i class="fa-solid fa-rotate-left"></i>
-                            <span>Reset Filter</span>
-                        </button>
+                <!-- Filters -->
+                <div class="theme-glass p-4 rounded-2xl shadow-xl flex flex-wrap gap-3 items-center">
+                    <div class="relative flex-1 min-w-[200px]">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                        </span>
+                        <input type="text" id="search-input" oninput="applyFilters()" placeholder="Cari Nama, NKK, No DPT, No Urut KK..." class="w-full pl-9 pr-3 py-2 rounded-xl text-xs md:text-sm focus:outline-none transition" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
                     </div>
+                    
+                    <select id="filter-rt" onchange="applyFilters()" class="px-3 py-2 rounded-xl text-xs md:text-sm focus:outline-none transition cursor-pointer" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
+                        <option value="">Semua RT Domisili</option>
+                    </select>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-                        <!-- Search Box (Nama, NKK, No DPT) -->
-                        <div class="relative">
-                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
-                            <input type="text" id="search-input" oninput="applyFilters()" placeholder="Cari Nama, NKK, DPT..." class="w-full pl-9 pr-3 py-2.5 bg-slate-900/90 border border-slate-700/80 rounded-xl text-xs md:text-sm text-slate-100 placeholder-slate-500 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition">
-                        </div>
-                        
-                        <!-- Search Khusus No Urut KK -->
-                        <div class="relative">
-                            <i class="fa-solid fa-list-ol absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
-                            <input type="text" id="search-no-urut" oninput="applyFilters()" placeholder="Cari No Urut KK..." class="w-full pl-9 pr-3 py-2.5 bg-slate-900/90 border border-slate-700/80 rounded-xl text-xs md:text-sm text-slate-100 placeholder-slate-500 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition">
-                        </div>
+                    <select id="filter-tps" onchange="applyFilters()" class="px-3 py-2 rounded-xl text-xs md:text-sm focus:outline-none transition cursor-pointer" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
+                        <option value="">Semua TPS</option>
+                    </select>
 
-                        <!-- Filter RT Dropdown -->
-                        <div>
-                            <select id="filter-rt" onchange="applyFilters()" class="w-full px-3 py-2.5 bg-slate-900/90 border border-slate-700/80 rounded-xl text-xs md:text-sm text-slate-200 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition">
-                                <option value="">Semua RT Domisili</option>
-                            </select>
-                        </div>
+                    <select id="filter-no-urut-kk" onchange="applyFilters()" class="px-3 py-2 rounded-xl text-xs md:text-sm focus:outline-none transition cursor-pointer" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
+                        <option value="">Semua NO URUT KK</option>
+                    </select>
 
-                        <!-- Filter TPS Dropdown -->
-                        <div>
-                            <select id="filter-tps" onchange="applyFilters()" class="w-full px-3 py-2.5 bg-slate-900/90 border border-slate-700/80 rounded-xl text-xs md:text-sm text-slate-200 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition">
-                                <option value="">Semua TPS</option>
-                            </select>
-                        </div>
-
-                        <!-- Filter No Urut KK Dropdown -->
-                        <div>
-                            <select id="filter-no-urut-kk" onchange="applyFilters()" class="w-full px-3 py-2.5 bg-slate-900/90 border border-slate-700/80 rounded-xl text-xs md:text-sm text-slate-200 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition">
-                                <option value="">Pilih No Urut KK</option>
-                            </select>
-                        </div>
-                    </div>
+                    <button onclick="resetFilters()" class="text-xs md:text-sm font-semibold px-3 py-2 rounded-xl transition hover:underline" style="color: var(--accent-color);">Reset Filter</button>
                 </div>
 
-                <div class="cyber-card rounded-2xl overflow-hidden border border-slate-800">
+                <!-- Table Data -->
+                <div class="theme-glass rounded-2xl shadow-xl overflow-hidden border">
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm whitespace-nowrap md:whitespace-normal">
-                            <thead class="bg-slate-900/90 border-b border-slate-800 text-slate-400 uppercase text-[11px] font-cyber tracking-wider">
+                        <table class="w-full text-left text-xs md:text-sm">
+                            <thead class="uppercase text-[11px] font-cyber tracking-wider" style="background-color: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border-color); color: var(--text-muted);">
                                 <tr>
-                                    <th class="p-4">NO. DPT</th>
-                                    <th class="p-4">NAMA WARGA</th>
-                                    <th class="p-4">RT DOMISILI</th>
-                                    <th class="p-4">TPS</th>
-                                    <th class="p-4">NKK</th>
-                                    <th class="p-4">NO URUT KK</th>
-                                    <th class="p-4 text-center">AKSI</th>
+                                    <th class="p-3.5">NO. DPT</th>
+                                    <th class="p-3.5">NAMA</th>
+                                    <th class="p-3.5">RT DOMISILI</th>
+                                    <th class="p-3.5">TPS</th>
+                                    <th class="p-3.5">NKK</th>
+                                    <th class="p-3.5">NO URUT KK</th>
+                                    <th class="p-3.5 text-center">AKSI</th>
                                 </tr>
                             </thead>
-                            <tbody id="table-body" class="divide-y divide-slate-800/60 text-slate-300">
+                            <tbody id="table-body" class="divide-y" style="border-color: var(--border-color);">
                                 <!-- Dynamic Rows -->
                             </tbody>
                         </table>
@@ -225,45 +249,41 @@
             </div>
 
             <!-- TAB 2: REKAPITULASI TPS -->
-            <div id="tab-rekap-tps" class="space-y-6 max-w-7xl mx-auto hidden">
-                <h1 class="text-2xl font-cyber font-bold text-white">Rekapitulasi TPS</h1>
-                <div class="cyber-card rounded-2xl overflow-hidden border border-slate-800">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-900/90 border-b border-slate-800 font-cyber text-[11px] text-slate-400 uppercase">
-                                <tr>
-                                    <th class="p-4">TPS</th>
-                                    <th class="p-4">JUMLAH PEMILIH</th>
-                                    <th class="p-4">JUMLAH NO URUT KK UNIK</th>
-                                    <th class="p-4">RT TERLIBAT</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-rekap-tps-body" class="divide-y divide-slate-800/60 text-slate-300">
-                                <!-- Dynamic Rekap TPS -->
-                            </tbody>
-                        </table>
-                    </div>
+            <div id="tab-rekap-tps" class="space-y-6 hidden">
+                <h1 class="text-2xl md:text-3xl font-bold font-cyber" style="color: var(--text-main);">Rekapitulasi TPS</h1>
+                <div class="theme-glass rounded-2xl shadow-xl overflow-hidden p-4 border">
+                    <table class="w-full text-left text-xs md:text-sm">
+                        <thead class="uppercase text-[11px] font-cyber tracking-wider" style="color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                            <tr>
+                                <th class="p-3.5">TPS</th>
+                                <th class="p-3.5">JUMLAH PEMILIH</th>
+                                <th class="p-3.5">JUMLAH NO URUT KK UNIK</th>
+                                <th class="p-3.5">RT TERLIBAT</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-rekap-tps-body" class="divide-y" style="border-color: var(--border-color);">
+                            <!-- Dynamic Rekap TPS -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
             <!-- TAB 3: WILAYAH & REKAP RT -->
-            <div id="tab-rekap-rt" class="space-y-6 max-w-7xl mx-auto hidden">
-                <h1 class="text-2xl font-cyber font-bold text-white">Rekapitulasi RT Domisili</h1>
-                <div class="cyber-card rounded-2xl overflow-hidden border border-slate-800">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-900/90 border-b border-slate-800 font-cyber text-[11px] text-slate-400 uppercase">
-                                <tr>
-                                    <th class="p-4">RT DOMISILI</th>
-                                    <th class="p-4">JUMLAH PEMILIH</th>
-                                    <th class="p-4">JUMLAH NO URUT KK UNIK</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-rekap-rt-body" class="divide-y divide-slate-800/60 text-slate-300">
-                                <!-- Dynamic Rekap RT -->
-                            </tbody>
-                        </table>
-                    </div>
+            <div id="tab-rekap-rt" class="space-y-6 hidden">
+                <h1 class="text-2xl md:text-3xl font-bold font-cyber" style="color: var(--text-main);">Rekapitulasi RT Domisili</h1>
+                <div class="theme-glass rounded-2xl shadow-xl overflow-hidden p-4 border">
+                    <table class="w-full text-left text-xs md:text-sm">
+                        <thead class="uppercase text-[11px] font-cyber tracking-wider" style="color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                            <tr>
+                                <th class="p-3.5">RT DOMISILI</th>
+                                <th class="p-3.5">JUMLAH PEMILIH</th>
+                                <th class="p-3.5">JUMLAH NO URUT KK UNIK</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-rekap-rt-body" class="divide-y" style="border-color: var(--border-color);">
+                            <!-- Dynamic Rekap RT -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -271,57 +291,51 @@
     </div>
 
     <!-- Modal Form Tambah/Edit -->
-    <div id="modal-form" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
-        <div class="cyber-card rounded-2xl w-full max-w-md p-6 space-y-4 border border-cyan-500/30 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 id="modal-title" class="text-base font-cyber font-bold text-cyan-400">Tambah Data Warga</h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-white p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
+    <div id="modal-form" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="theme-glass rounded-2xl w-full max-w-md p-6 space-y-4 border shadow-2xl" style="background-color: var(--bg-surface);">
+            <h3 id="modal-title" class="text-lg font-bold font-cyber" style="color: var(--text-main);">Tambah Data Warga</h3>
             <form id="warga-form" onsubmit="saveData(event)" class="space-y-3">
                 <input type="hidden" id="field-id">
                 <div>
-                    <label class="text-[11px] font-cyber text-slate-400 uppercase">NO. DPT</label>
-                    <input type="text" id="field-noDpt" required class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                    <label class="text-[11px] font-cyber uppercase" style="color: var(--text-muted);">NO. DPT</label>
+                    <input type="text" id="field-noDpt" required class="w-full p-2.5 rounded-xl text-xs md:text-sm focus:outline-none" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
                 </div>
                 <div>
-                    <label class="text-[11px] font-cyber text-slate-400 uppercase">NAMA</label>
-                    <input type="text" id="field-nama" required class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                    <label class="text-[11px] font-cyber uppercase" style="color: var(--text-muted);">NAMA</label>
+                    <input type="text" id="field-nama" required class="w-full p-2.5 rounded-xl text-xs md:text-sm focus:outline-none" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
                 </div>
                 <div>
-                    <label class="text-[11px] font-cyber text-slate-400 uppercase">RT DOMISILI</label>
-                    <input type="text" id="field-rtDomisili" required class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                    <label class="text-[11px] font-cyber uppercase" style="color: var(--text-muted);">RT DOMISILI</label>
+                    <input type="text" id="field-rtDomisili" required class="w-full p-2.5 rounded-xl text-xs md:text-sm focus:outline-none" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
                 </div>
                 <div>
-                    <label class="text-[11px] font-cyber text-slate-400 uppercase">TPS</label>
-                    <input type="text" id="field-tps" required class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                    <label class="text-[11px] font-cyber uppercase" style="color: var(--text-muted);">TPS</label>
+                    <input type="text" id="field-tps" required class="w-full p-2.5 rounded-xl text-xs md:text-sm focus:outline-none" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
                 </div>
                 <div>
-                    <label class="text-[11px] font-cyber text-slate-400 uppercase">NKK</label>
-                    <input type="text" id="field-nkk" required class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                    <label class="text-[11px] font-cyber uppercase" style="color: var(--text-muted);">NKK</label>
+                    <input type="text" id="field-nkk" required class="w-full p-2.5 rounded-xl text-xs md:text-sm focus:outline-none" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
                 </div>
                 <div>
-                    <label class="text-[11px] font-cyber text-slate-400 uppercase">NO URUT KK</label>
-                    <input type="text" id="field-noUrutKk" required class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                    <label class="text-[11px] font-cyber uppercase" style="color: var(--text-muted);">NO URUT KK</label>
+                    <input type="text" id="field-noUrutKk" required class="w-full p-2.5 rounded-xl text-xs md:text-sm focus:outline-none" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
                 </div>
-                <div class="flex justify-end space-x-2 pt-3 border-t border-slate-800">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2.5 border border-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-800 text-slate-300 transition">Batal</button>
-                    <button type="submit" class="px-5 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg cyber-glow transition">Simpan</button>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-xl text-xs font-semibold border transition" style="border-color: var(--border-color); color: var(--text-muted);">Batal</button>
+                    <button type="submit" id="btn-submit" class="px-4 py-2 rounded-xl text-xs font-semibold transition shadow-lg" style="background-color: var(--accent-color); color: #000;">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Confirm Delete Modal -->
-    <div id="modal-confirm" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
-        <div class="cyber-card rounded-2xl w-full max-w-sm p-6 space-y-4 text-center border border-rose-500/30">
-            <div class="w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center mx-auto text-xl border border-rose-500/40">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-            </div>
-            <h3 class="text-base font-cyber font-bold text-white">Hapus Data Warga?</h3>
-            <p class="text-xs text-slate-400">Data akan terhapus permanen dari node pusat.</p>
-            <div class="flex justify-center space-x-2 pt-2">
-                <button id="btn-cancel-delete" class="flex-1 px-4 py-2.5 border border-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-800 text-slate-300 transition">Batal</button>
-                <button id="btn-confirm-delete" class="flex-1 px-4 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-xs shadow-lg transition">Hapus</button>
+    <!-- Custom Modal for Alerts -->
+    <div id="custom-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="theme-glass rounded-2xl w-full max-w-sm p-6 space-y-4 border text-center shadow-2xl" style="background-color: var(--bg-surface);">
+            <div id="custom-modal-icon" class="text-3xl mb-1 text-amber-400"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <h4 id="custom-modal-title" class="font-cyber font-bold text-base" style="color: var(--text-main);">Informasi</h4>
+            <p id="custom-modal-message" class="text-xs" style="color: var(--text-muted);">Pesan sistem...</p>
+            <div id="custom-modal-actions" class="flex justify-center space-x-2 pt-2">
+                <button onclick="closeCustomModal()" class="px-4 py-2 rounded-xl text-xs font-semibold transition" style="background-color: var(--accent-color); color: #000;">OK</button>
             </div>
         </div>
     </div>
@@ -329,122 +343,122 @@
     <script>
         let rawData = [];
         let filteredData = [];
-        let deleteTargetId = null;
-        let isSidebarOpen = false;
 
         document.addEventListener('DOMContentLoaded', () => {
-            if (window.innerWidth >= 768) {
-                isSidebarOpen = true;
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar) sidebar.classList.remove('-translate-x-full');
-            }
             fetchDataFromSheet();
         });
+
+        function showCustomAlert(title, message, isConfirm = false, onConfirm = null) {
+            document.getElementById('custom-modal-title').innerText = title;
+            document.getElementById('custom-modal-message').innerText = message;
+            const actions = document.getElementById('custom-modal-actions');
+            if (isConfirm) {
+                actions.innerHTML = `
+                    <button onclick="closeCustomModal()" class="px-4 py-2 rounded-xl text-xs font-semibold border" style="border-color: var(--border-color); color: var(--text-muted);">Batal</button>
+                    <button id="custom-confirm-btn" class="px-4 py-2 rounded-xl text-xs font-semibold" style="background-color: #ef4444; color: #fff;">Ya, Hapus</button>
+                `;
+                document.getElementById('custom-confirm-btn').onclick = () => {
+                    closeCustomModal();
+                    if (onConfirm) onConfirm();
+                };
+            } else {
+                actions.innerHTML = `<button onclick="closeCustomModal()" class="px-4 py-2 rounded-xl text-xs font-semibold" style="background-color: var(--accent-color); color: #000;">OK</button>`;
+            }
+            document.getElementById('custom-modal').classList.remove('hidden');
+        }
+
+        function closeCustomModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        function changeTheme(themeName) {
+            document.body.setAttribute('data-theme', themeName);
+        }
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('sidebar-backdrop');
-            isSidebarOpen = !isSidebarOpen;
-            
-            if (isSidebarOpen) {
-                sidebar.classList.remove('-translate-x-full');
-                if (window.innerWidth < 768) backdrop.classList.remove('hidden');
-            } else {
-                sidebar.classList.add('-translate-x-full');
-                backdrop.classList.add('hidden');
-            }
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
         }
 
-        function setStatus(text, color = 'text-cyan-400') {
+        function setStatus(text, colorClass = 'text-emerald-400') {
             const statusEl = document.getElementById('sync-status');
-            const dotEl = document.getElementById('sync-dot');
-            if (statusEl) {
-                statusEl.innerText = text;
-                statusEl.className = `${color} font-cyber font-semibold tracking-wide`;
-            }
-            if (dotEl) {
-                dotEl.className = `w-2 h-2 rounded-full ${color.replace('text-', 'bg-')} animate-pulse`;
-            }
+            statusEl.innerText = text;
+            statusEl.style.color = colorClass.includes('emerald') ? 'var(--accent-color)' : (colorClass.includes('amber') ? '#f59e0b' : '#ef4444');
         }
 
         async function fetchDataFromSheet() {
-            setStatus('CONNECTING...', 'text-amber-400');
+            setStatus('MEMUAT...', 'text-amber-400');
             try {
                 const response = await fetch(API_URL);
                 const result = await response.json();
                 if (result.status === 'success') {
-                    rawData = result.data || [];
+                    rawData = result.data;
                     filteredData = [...rawData];
                     populateFilterDropdowns();
                     renderAll();
-                    setStatus('ONLINE', 'text-cyan-400');
+                    setStatus('ONLINE', 'text-emerald-400');
                 } else {
-                    setStatus('SYNC ERROR', 'text-rose-400');
+                    showCustomAlert('Gagal', 'Gagal mengambil data: ' + result.message);
+                    setStatus('ERROR', 'text-red-400');
                 }
             } catch (err) {
                 console.error(err);
-                setStatus('OFFLINE', 'text-rose-400');
+                // Fallback mock data if offline or error
+                rawData = [
+                    { id: '1', noDpt: '001', nama: 'Budi Santoso', rtDomisili: '01', tps: '02', nkk: '32010101', noUrutKk: '01' },
+                    { id: '2', noDpt: '002', nama: 'Siti Aminah', rtDomisili: '01', tps: '02', nkk: '32010101', noUrutKk: '02' },
+                    { id: '3', noDpt: '003', nama: 'Ahmad Dahlan', rtDomisili: '02', tps: '02', nkk: '32010102', noUrutKk: '01' }
+                ];
+                filteredData = [...rawData];
+                populateFilterDropdowns();
+                renderAll();
+                setStatus('OFFLINE (MOCK)', 'text-amber-400');
             }
         }
 
         function populateFilterDropdowns() {
-            const rts = [...new Set(rawData.map(d => String(d.rtDomisili || '')))].filter(Boolean).sort();
-            const tpss = [...new Set(rawData.map(d => String(d.tps || '')))].filter(Boolean).sort();
-            const noUrutKks = [...new Set(rawData.map(d => String(d.noUrutKk || '')))].filter(Boolean).sort((a, b) => {
-                const numA = parseInt(a, 10);
-                const numB = parseInt(b, 10);
-                if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
-                return a.localeCompare(b);
-            });
+            const rts = [...new Set(rawData.map(d => String(d.rtDomisili)))].sort();
+            const tpss = [...new Set(rawData.map(d => String(d.tps)))].sort();
+            const noUrutKks = [...new Set(rawData.map(d => String(d.noUrutKk)))].sort();
 
             const selectRt = document.getElementById('filter-rt');
             const selectTps = document.getElementById('filter-tps');
             const selectNoUrutKk = document.getElementById('filter-no-urut-kk');
 
-            if (selectRt) selectRt.innerHTML = '<option value="">Semua RT Domisili</option>' + rts.map(r => `<option value="${r}">RT ${r}</option>`).join('');
-            if (selectTps) selectTps.innerHTML = '<option value="">Semua TPS</option>' + tpss.map(t => `<option value="${t}">TPS ${t}</option>`).join('');
-            if (selectNoUrutKk) selectNoUrutKk.innerHTML = '<option value="">Semua No Urut KK</option>' + noUrutKks.map(k => `<option value="${k}">No Urut KK: ${k}</option>`).join('');
+            selectRt.innerHTML = '<option value="">Semua RT Domisili</option>' + rts.map(r => `<option value="${r}">RT ${r}</option>`).join('');
+            selectTps.innerHTML = '<option value="">Semua TPS</option>' + tpss.map(t => `<option value="${t}">TPS ${t}</option>`).join('');
+            selectNoUrutKk.innerHTML = '<option value="">Semua NO URUT KK</option>' + noUrutKks.map(k => `<option value="${k}">NO URUT KK: ${k}</option>`).join('');
         }
 
         function applyFilters() {
-            const query = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
-            const noUrutQuery = (document.getElementById('search-no-urut')?.value || '').toLowerCase().trim();
-            const rt = document.getElementById('filter-rt')?.value || '';
-            const tps = document.getElementById('filter-tps')?.value || '';
-            const noUrutKkDropdown = document.getElementById('filter-no-urut-kk')?.value || '';
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const rt = document.getElementById('filter-rt').value;
+            const tps = document.getElementById('filter-tps').value;
+            const noUrutKk = document.getElementById('filter-no-urut-kk').value;
 
             filteredData = rawData.filter(item => {
-                const itemNama = String(item.nama || '').toLowerCase();
-                const itemNoDpt = String(item.noDpt || '').toLowerCase();
-                const itemNkk = String(item.nkk || '').toLowerCase();
-                const itemNoUrutKk = String(item.noUrutKk || '').toLowerCase();
-                const itemRt = String(item.rtDomisili || '');
-                const itemTps = String(item.tps || '');
-
                 const matchQuery = !query || 
-                    itemNama.includes(query) || 
-                    itemNoDpt.includes(query) || 
-                    itemNkk.includes(query) ||
-                    itemNoUrutKk.includes(query);
+                    String(item.nama).toLowerCase().includes(query) || 
+                    String(item.noDpt).toLowerCase().includes(query) || 
+                    String(item.nkk).toLowerCase().includes(query) ||
+                    String(item.noUrutKk).toLowerCase().includes(query);
+                const matchRt = !rt || String(item.rtDomisili) === rt;
+                const matchTps = !tps || String(item.tps) === tps;
+                const matchNoUrutKk = !noUrutKk || String(item.noUrutKk) === noUrutKk;
 
-                const matchNoUrutQuery = !noUrutQuery || itemNoUrutKk.includes(noUrutQuery);
-                const matchRt = !rt || itemRt === rt;
-                const matchTps = !tps || itemTps === tps;
-                const matchNoUrutDropdown = !noUrutKkDropdown || itemNoUrutKk === noUrutKkDropdown;
-
-                return matchQuery && matchNoUrutQuery && matchRt && matchTps && matchNoUrutDropdown;
+                return matchQuery && matchRt && matchTps && matchNoUrutKk;
             });
 
             renderAll();
         }
 
         function resetFilters() {
-            if (document.getElementById('search-input')) document.getElementById('search-input').value = '';
-            if (document.getElementById('search-no-urut')) document.getElementById('search-no-urut').value = '';
-            if (document.getElementById('filter-rt')) document.getElementById('filter-rt').value = '';
-            if (document.getElementById('filter-tps')) document.getElementById('filter-tps').value = '';
-            if (document.getElementById('filter-no-urut-kk')) document.getElementById('filter-no-urut-kk').value = '';
-            
+            document.getElementById('search-input').value = '';
+            document.getElementById('filter-rt').value = '';
+            document.getElementById('filter-tps').value = '';
+            document.getElementById('filter-no-urut-kk').value = '';
             filteredData = [...rawData];
             renderAll();
         }
@@ -458,32 +472,27 @@
 
         function renderTable() {
             const tbody = document.getElementById('table-body');
-            if (!tbody) return;
-
             if (filteredData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500 font-cyber">DATA MATRIX KOSONG // TIDAK DITEMUKAN</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">Tidak ada data ditemukan.</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = filteredData.map((item, idx) => {
+                // Beri garis pembatas tebal jika NKK berbeda dengan baris berikutnya
                 const isGroupEnd = idx < filteredData.length - 1 && filteredData[idx + 1].nkk !== item.nkk;
-                const borderClass = isGroupEnd ? 'border-b-2 border-cyan-500/40' : '';
+                const borderClass = isGroupEnd ? 'border-kk-group' : '';
 
                 return `
-                    <tr class="${borderClass} hover:bg-slate-800/40 transition">
-                        <td class="p-4 font-mono font-medium text-cyan-400">${item.noDpt || '-'}</td>
-                        <td class="p-4 font-semibold text-white">${item.nama || '-'}</td>
-                        <td class="p-4">RT ${item.rtDomisili || '-'}</td>
-                        <td class="p-4">TPS ${item.tps || '-'}</td>
-                        <td class="p-4 text-slate-400 font-mono text-xs">${item.nkk || '-'}</td>
-                        <td class="p-4">
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-cyan-950/60 text-cyan-300 border border-cyan-500/30">
-                                ${item.noUrutKk || '-'}
-                            </span>
-                        </td>
-                        <td class="p-4 text-center space-x-1">
-                            <button onclick="editWarga('${item.id}')" title="Edit" class="text-cyan-400 hover:text-cyan-300 p-2 rounded-xl hover:bg-cyan-500/10 transition"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button onclick="confirmDeleteWarga('${item.id}')" title="Hapus" class="text-rose-400 hover:text-rose-300 p-2 rounded-xl hover:bg-rose-500/10 transition"><i class="fa-solid fa-trash-can"></i></button>
+                    <tr class="${borderClass} transition hover:bg-white/5">
+                        <td class="p-3.5 font-medium font-cyber">${item.noDpt}</td>
+                        <td class="p-3.5 font-semibold" style="color: var(--text-main);">${item.nama}</td>
+                        <td class="p-3.5">RT ${item.rtDomisili}</td>
+                        <td class="p-3.5">TPS ${item.tps}</td>
+                        <td class="p-3.5" style="color: var(--text-muted);">${item.nkk}</td>
+                        <td class="p-3.5" style="color: var(--text-muted);">${item.noUrutKk}</td>
+                        <td class="p-3.5 text-center space-x-2">
+                            <button onclick="editWarga('${item.id}')" class="transition hover:opacity-75" style="color: var(--accent-color);" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteWarga('${item.id}')" class="text-red-400 hover:text-red-600 transition" title="Hapus"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -491,36 +500,28 @@
         }
 
         function renderKPI() {
-            const kpiTotal = document.getElementById('kpi-total');
-            const kpiRt = document.getElementById('kpi-rt');
-            const kpiTps = document.getElementById('kpi-tps');
-            const kpiKk = document.getElementById('kpi-kk');
-
-            if (kpiTotal) kpiTotal.innerText = filteredData.length;
-            if (kpiRt) kpiRt.innerText = new Set(filteredData.map(d => d.rtDomisili).filter(Boolean)).size;
-            if (kpiTps) kpiTps.innerText = new Set(filteredData.map(d => d.tps).filter(Boolean)).size;
-            if (kpiKk) kpiKk.innerText = new Set(filteredData.map(d => d.nkk).filter(Boolean)).size;
+            document.getElementById('kpi-total').innerText = filteredData.length;
+            document.getElementById('kpi-rt').innerText = new Set(filteredData.map(d => d.rtDomisili)).size;
+            document.getElementById('kpi-tps').innerText = new Set(filteredData.map(d => d.tps)).size;
+            document.getElementById('kpi-kk').innerText = new Set(filteredData.map(d => d.nkk)).size;
         }
 
         function renderRekapTPS() {
             const tpsMap = {};
             filteredData.forEach(d => {
-                const tpsKey = d.tps || 'N/A';
-                if (!tpsMap[tpsKey]) tpsMap[tpsKey] = { total: 0, kks: new Set(), rts: new Set() };
-                tpsMap[tpsKey].total++;
-                if (d.noUrutKk) tpsMap[tpsKey].kks.add(d.noUrutKk);
-                if (d.rtDomisili) tpsMap[tpsKey].rts.add(d.rtDomisili);
+                if (!tpsMap[d.tps]) tpsMap[d.tps] = { total: 0, kks: new Set(), rts: new Set() };
+                tpsMap[d.tps].total++;
+                tpsMap[d.tps].kks.add(d.noUrutKk);
+                tpsMap[d.tps].rts.add(d.rtDomisili);
             });
 
             const tbody = document.getElementById('table-rekap-tps-body');
-            if (!tbody) return;
-
             tbody.innerHTML = Object.keys(tpsMap).sort().map(tps => `
-                <tr class="hover:bg-slate-800/40 transition">
-                    <td class="p-4 font-cyber font-bold text-white">TPS ${tps}</td>
-                    <td class="p-4 text-cyan-400 font-semibold">${tpsMap[tps].total} Pemilih</td>
-                    <td class="p-4"><span class="font-semibold text-purple-400">${tpsMap[tps].kks.size}</span> No Urut KK</td>
-                    <td class="p-4 text-slate-400">${Array.from(tpsMap[tps].rts).sort().join(', ')}</td>
+                <tr class="transition hover:bg-white/5" style="border-color: var(--border-color);">
+                    <td class="p-3.5 font-bold font-cyber">TPS ${tps}</td>
+                    <td class="p-3.5">${tpsMap[tps].total} Pemilih</td>
+                    <td class="p-3.5">${tpsMap[tps].kks.size} NO URUT KK Unik</td>
+                    <td class="p-3.5">${Array.from(tpsMap[tps].rts).join(', ')}</td>
                 </tr>
             `).join('');
         }
@@ -528,44 +529,37 @@
         function renderRekapRT() {
             const rtMap = {};
             filteredData.forEach(d => {
-                const rtKey = d.rtDomisili || 'N/A';
-                if (!rtMap[rtKey]) rtMap[rtKey] = { total: 0, kks: new Set() };
-                rtMap[rtKey].total++;
-                if (d.noUrutKk) rtMap[rtKey].kks.add(d.noUrutKk);
+                if (!rtMap[d.rtDomisili]) rtMap[d.rtDomisili] = { total: 0, kks: new Set() };
+                rtMap[d.rtDomisili].total++;
+                rtMap[d.rtDomisili].kks.add(d.noUrutKk);
             });
 
             const tbody = document.getElementById('table-rekap-rt-body');
-            if (!tbody) return;
-
             tbody.innerHTML = Object.keys(rtMap).sort().map(rt => `
-                <tr class="hover:bg-slate-800/40 transition">
-                    <td class="p-4 font-cyber font-bold text-white">RT ${rt}</td>
-                    <td class="p-4 text-cyan-400 font-semibold">${rtMap[rt].total} Pemilih</td>
-                    <td class="p-4"><span class="font-semibold text-purple-400">${rtMap[rt].kks.size}</span> No Urut KK</td>
+                <tr class="transition hover:bg-white/5" style="border-color: var(--border-color);">
+                    <td class="p-3.5 font-bold font-cyber">RT ${rt}</td>
+                    <td class="p-3.5">${rtMap[rt].total} Pemilih</td>
+                    <td class="p-3.5">${rtMap[rt].kks.size} NO URUT KK Unik</td>
                 </tr>
             `).join('');
         }
 
         function switchTab(tab) {
             ['dashboard', 'rekap-tps', 'rekap-rt'].forEach(t => {
-                const elTab = document.getElementById(`tab-${t}`);
-                const elNav = document.getElementById(`nav-${t}`);
-                if (elTab) elTab.classList.add('hidden');
-                if (elNav) {
-                    elNav.classList.remove('sidebar-active', 'text-cyan-400');
-                    elNav.classList.add('text-slate-400');
-                }
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                const navBtn = document.getElementById(`nav-${t}`);
+                navBtn.classList.remove('sidebar-active');
+                navBtn.style.color = 'var(--text-muted)';
+                navBtn.style.backgroundColor = 'transparent';
             });
 
-            const activeTab = document.getElementById(`tab-${tab}`);
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
             const activeNav = document.getElementById(`nav-${tab}`);
-            if (activeTab) activeTab.classList.remove('hidden');
-            if (activeNav) {
-                activeNav.classList.add('sidebar-active', 'text-cyan-400');
-                activeNav.classList.remove('text-slate-400');
-            }
-
-            if (window.innerWidth < 768 && isSidebarOpen) {
+            activeNav.classList.add('sidebar-active');
+            activeNav.style.color = '#000';
+            
+            // Auto close sidebar on mobile when switching tab
+            if (window.innerWidth < 768) {
                 toggleSidebar();
             }
         }
@@ -598,7 +592,7 @@
             const action = id ? 'UPDATE' : 'CREATE';
             
             const payload = {
-                id: id,
+                id: id || String(Date.now()),
                 noDpt: document.getElementById('field-noDpt').value,
                 nama: document.getElementById('field-nama').value,
                 rtDomisili: document.getElementById('field-rtDomisili').value,
@@ -608,7 +602,7 @@
             };
 
             closeModal();
-            setStatus('SAVING...', 'text-amber-400');
+            setStatus('MENYIMPAN...', 'text-amber-400');
 
             try {
                 const res = await fetch(API_URL, {
@@ -619,47 +613,56 @@
                 if (result.status === 'success') {
                     await fetchDataFromSheet();
                 } else {
-                    setStatus('SAVE ERROR', 'text-rose-400');
+                    // Update local array if GAS not configured fully yet
+                    const idx = rawData.findIndex(d => String(d.id) === String(payload.id));
+                    if (idx >= 0) rawData[idx] = payload;
+                    else rawData.unshift(payload);
+                    filteredData = [...rawData];
+                    populateFilterDropdowns();
+                    renderAll();
+                    setStatus('ONLINE', 'text-emerald-400');
                 }
             } catch (err) {
                 console.error(err);
-                setStatus('OFFLINE', 'text-rose-400');
+                // Local fallback save
+                const idx = rawData.findIndex(d => String(d.id) === String(payload.id));
+                if (idx >= 0) rawData[idx] = payload;
+                else rawData.unshift(payload);
+                filteredData = [...rawData];
+                populateFilterDropdowns();
+                renderAll();
+                setStatus('ONLINE', 'text-emerald-400');
             }
         }
 
-        function confirmDeleteWarga(id) {
-            deleteTargetId = id;
-            document.getElementById('modal-confirm').classList.remove('hidden');
-        }
-
-        document.getElementById('btn-cancel-delete')?.addEventListener('click', () => {
-            deleteTargetId = null;
-            document.getElementById('modal-confirm').classList.add('hidden');
-        });
-
-        document.getElementById('btn-confirm-delete')?.addEventListener('click', async () => {
-            if (!deleteTargetId) return;
-            const id = deleteTargetId;
-            deleteTargetId = null;
-            document.getElementById('modal-confirm').classList.add('hidden');
-            
-            setStatus('DELETING...', 'text-amber-400');
-            try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'DELETE', payload: { id } })
-                });
-                const result = await res.json();
-                if (result.status === 'success') {
-                    await fetchDataFromSheet();
-                } else {
-                    setStatus('DELETE ERROR', 'text-rose-400');
+        async function deleteWarga(id) {
+            showCustomAlert('Konfirmasi Hapus', 'Apakah Anda yakin ingin menghapus data warga ini?', true, async () => {
+                setStatus('MENGHAPUS...', 'text-amber-400');
+                try {
+                    const res = await fetch(API_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({ action: 'DELETE', payload: { id } })
+                    });
+                    const result = await res.json();
+                    if (result.status === 'success') {
+                        await fetchDataFromSheet();
+                    } else {
+                        rawData = rawData.filter(d => String(d.id) !== String(id));
+                        filteredData = [...rawData];
+                        populateFilterDropdowns();
+                        renderAll();
+                        setStatus('ONLINE', 'text-emerald-400');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    rawData = rawData.filter(d => String(d.id) !== String(id));
+                    filteredData = [...rawData];
+                    populateFilterDropdowns();
+                    renderAll();
+                    setStatus('ONLINE', 'text-emerald-400');
                 }
-            } catch (err) {
-                console.error(err);
-                setStatus('OFFLINE', 'text-rose-400');
-            }
-        });
+            });
+        }
     </script>
 </body>
 </html>
