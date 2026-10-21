@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Warga & DPT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .sidebar-active { background-color: #1e293b; border-left: 4px solid #3b82f6; }
+        .border-kk-group { border-bottom: 2px solid #000000 !important; }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 antialiased">
+
+    <!-- TEMPAT PENYEMATAN API URL GOOGLE APPS SCRIPT -->
+    <script>
+        // Tempelkan Web App URL dari Google Apps Script di bawah ini:
+        const API_URL = "https://script.google.com/macros/s/AKfycbwE193UNQ3EoriLuJ3bfXyST6EluDMiL7BgiMStf698RRpNvMFubCrvkDhUZrQrf5c/exec";
+    </script>
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0">
+            <div class="p-4 text-xl font-bold border-b border-slate-800 flex items-center space-x-2">
+                <i class="fa-solid fa-users-gear text-blue-500"></i>
+                <span>DPT Warga</span>
+            </div>
+            <nav class="flex-1 p-4 space-y-1">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="sidebar-active w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition hover:bg-slate-800">
+                    <i class="fa-solid fa-chart-line w-5"></i>
+                    <span>Dashboard & Data DPT</span>
+                </button>
+                <button onclick="switchTab('rekap-tps')" id="nav-rekap-tps" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition hover:bg-slate-800 text-slate-400">
+                    <i class="fa-solid fa-check-to-slot w-5"></i>
+                    <span>Rekapitulasi TPS</span>
+                </button>
+                <button onclick="switchTab('rekap-rt')" id="nav-rekap-rt" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition hover:bg-slate-800 text-slate-400">
+                    <i class="fa-solid fa-house-user w-5"></i>
+                    <span>Wilayah & Rekap RT</span>
+                </button>
+            </nav>
+            <div class="p-4 border-t border-slate-800 text-xs text-slate-500 text-center">
+                Sync Status: <span id="sync-status" class="text-emerald-400 font-semibold">Siap</span>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto p-6">
+            
+            <!-- TAB 1: DASHBOARD & DATA DPT -->
+            <div id="tab-dashboard" class="space-y-6">
+                <div class="flex justify-between items-center flex-wrap gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Dashboard Data Warga & DPT</h1>
+                        <p class="text-slate-500 text-sm">Kelola data pemilih, lokasi RT, TPS, dan No Urut KK secara terintegrasi.</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="fetchDataFromSheet()" class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-rotate"></i>
+                            <span>Refresh</span>
+                        </button>
+                        <button onclick="openModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Tambah Warga</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                        <div class="text-xs font-semibold text-slate-500 uppercase">Total DPT / Warga</div>
+                        <div id="kpi-total" class="text-3xl font-bold text-slate-900 mt-1">0</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                        <div class="text-xs font-semibold text-slate-500 uppercase">Jumlah RT Domisili</div>
+                        <div id="kpi-rt" class="text-3xl font-bold text-blue-600 mt-1">0</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                        <div class="text-xs font-semibold text-slate-500 uppercase">Jumlah TPS</div>
+                        <div id="kpi-tps" class="text-3xl font-bold text-emerald-600 mt-1">0</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                        <div class="text-xs font-semibold text-slate-500 uppercase">Jumlah Kepala Keluarga</div>
+                        <div id="kpi-kk" class="text-3xl font-bold text-amber-600 mt-1">0</div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-4 items-center">
+                    <input type="text" id="search-input" oninput="applyFilters()" placeholder="Cari Nama, NKK, No DPT..." class="px-3 py-2 border rounded-lg text-sm w-64 focus:outline-blue-500">
+                    
+                    <select id="filter-rt" onchange="applyFilters()" class="px-3 py-2 border rounded-lg text-sm focus:outline-blue-500">
+                        <option value="">Semua RT Domisili</option>
+                    </select>
+
+                    <select id="filter-tps" onchange="applyFilters()" class="px-3 py-2 border rounded-lg text-sm focus:outline-blue-500">
+                        <option value="">Semua TPS</option>
+                    </select>
+
+                    <select id="filter-no-urut-kk" onchange="applyFilters()" class="px-3 py-2 border rounded-lg text-sm focus:outline-blue-500">
+                        <option value="">Semua NO URUT KK</option>
+                    </select>
+
+                    <button onclick="resetFilters()" class="text-sm text-blue-600 hover:underline">Reset Filter</button>
+                </div>
+
+                <!-- Table Data -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50 border-b text-slate-700 uppercase text-xs font-bold">
+                                <tr>
+                                    <th class="p-3">NO. DPT</th>
+                                    <th class="p-3">NAMA</th>
+                                    <th class="p-3">RT DOMISILI</th>
+                                    <th class="p-3">TPS</th>
+                                    <th class="p-3">NKK</th>
+                                    <th class="p-3">NO URUT KK</th>
+                                    <th class="p-3 text-center">AKSI</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body" class="divide-y divide-slate-200">
+                                <!-- Dynamic Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: REKAPITULASI TPS -->
+            <div id="tab-rekap-tps" class="space-y-6 hidden">
+                <h1 class="text-2xl font-bold text-slate-900">Rekapitulasi TPS</h1>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden p-4">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-50 border-b font-bold">
+                            <tr>
+                                <th class="p-3">TPS</th>
+                                <th class="p-3">JUMLAH PEMILIH</th>
+                                <th class="p-3">JUMLAH NO URUT KK UNIK</th>
+                                <th class="p-3">RT TERLIBAT</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-rekap-tps-body">
+                            <!-- Dynamic Rekap TPS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 3: WILAYAH & REKAP RT -->
+            <div id="tab-rekap-rt" class="space-y-6 hidden">
+                <h1 class="text-2xl font-bold text-slate-900">Rekapitulasi RT Domisili</h1>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden p-4">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-50 border-b font-bold">
+                            <tr>
+                                <th class="p-3">RT DOMISILI</th>
+                                <th class="p-3">JUMLAH PEMILIH</th>
+                                <th class="p-3">JUMLAH NO URUT KK UNIK</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-rekap-rt-body">
+                            <!-- Dynamic Rekap RT -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modal Form Tambah/Edit -->
+    <div id="modal-form" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl w-full max-w-md p-6 space-y-4">
+            <h3 id="modal-title" class="text-lg font-bold">Tambah Data Warga</h3>
+            <form id="warga-form" onsubmit="saveData(event)" class="space-y-3">
+                <input type="hidden" id="field-id">
+                <div>
+                    <label class="text-xs font-semibold">NO. DPT</label>
+                    <input type="text" id="field-noDpt" required class="w-full p-2 border rounded text-sm">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold">NAMA</label>
+                    <input type="text" id="field-nama" required class="w-full p-2 border rounded text-sm">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold">RT DOMISILI</label>
+                    <input type="text" id="field-rtDomisili" required class="w-full p-2 border rounded text-sm">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold">TPS</label>
+                    <input type="text" id="field-tps" required class="w-full p-2 border rounded text-sm">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold">NKK</label>
+                    <input type="text" id="field-nkk" required class="w-full p-2 border rounded text-sm">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold">NO URUT KK</label>
+                    <input type="text" id="field-noUrutKk" required class="w-full p-2 border rounded text-sm">
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded text-sm">Batal</button>
+                    <button type="submit" id="btn-submit" class="px-4 py-2 bg-blue-600 text-white rounded text-sm">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let rawData = [];
+        let filteredData = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchDataFromSheet();
+        });
+
+        function setStatus(text, color = 'text-emerald-400') {
+            const statusEl = document.getElementById('sync-status');
+            statusEl.innerText = text;
+            statusEl.className = `font-semibold ${color}`;
+        }
+
+        async function fetchDataFromSheet() {
+            setStatus('Memuat Data...', 'text-amber-400');
+            try {
+                const response = await fetch(API_URL);
+                const result = await response.json();
+                if (result.status === 'success') {
+                    rawData = result.data;
+                    filteredData = [...rawData];
+                    populateFilterDropdowns();
+                    renderAll();
+                    setStatus('Tersinkronisasi', 'text-emerald-400');
+                } else {
+                    alert('Gagal mengambil data: ' + result.message);
+                    setStatus('Error Sinkronisasi', 'text-red-400');
+                }
+            } catch (err) {
+                console.error(err);
+                setStatus('Gagal Terhubung', 'text-red-400');
+            }
+        }
+
+        function populateFilterDropdowns() {
+            const rts = [...new Set(rawData.map(d => d.rtDomisili))].sort();
+            const tpss = [...new Set(rawData.map(d => d.tps))].sort();
+            const noUrutKks = [...new Set(rawData.map(d => d.noUrutKk))].sort();
+
+            const selectRt = document.getElementById('filter-rt');
+            const selectTps = document.getElementById('filter-tps');
+            const selectNoUrutKk = document.getElementById('filter-no-urut-kk');
+
+            selectRt.innerHTML = '<option value="">Semua RT Domisili</option>' + rts.map(r => `<option value="${r}">RT ${r}</option>`).join('');
+            selectTps.innerHTML = '<option value="">Semua TPS</option>' + tpss.map(t => `<option value="${t}">TPS ${t}</option>`).join('');
+            selectNoUrutKk.innerHTML = '<option value="">Semua NO URUT KK</option>' + noUrutKks.map(k => `<option value="${k}">NO URUT KK: ${k}</option>`).join('');
+        }
+
+        function applyFilters() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const rt = document.getElementById('filter-rt').value;
+            const tps = document.getElementById('filter-tps').value;
+            const noUrutKk = document.getElementById('filter-no-urut-kk').value;
+
+            filteredData = rawData.filter(item => {
+                const matchQuery = !query || 
+                    item.nama.toLowerCase().includes(query) || 
+                    item.noDpt.toLowerCase().includes(query) || 
+                    item.nkk.toLowerCase().includes(query);
+                const matchRt = !rt || item.rtDomisili === rt;
+                const matchTps = !tps || item.tps === tps;
+                const matchNoUrutKk = !noUrutKk || item.noUrutKk === noUrutKk;
+
+                return matchQuery && matchRt && matchTps && matchNoUrutKk;
+            });
+
+            renderAll();
+        }
+
+        function resetFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('filter-rt').value = '';
+            document.getElementById('filter-tps').value = '';
+            document.getElementById('filter-no-urut-kk').value = '';
+            filteredData = [...rawData];
+            renderAll();
+        }
+
+        function renderAll() {
+            renderTable();
+            renderKPI();
+            renderRekapTPS();
+            renderRekapRT();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            if (filteredData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">Tidak ada data ditemukan.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filteredData.map((item, idx) => {
+                const isGroupEnd = idx < filteredData.length - 1 && filteredData[idx + 1].nkk !== item.nkk;
+                const borderClass = isGroupEnd ? 'border-kk-group' : '';
+
+                return `
+                    <tr class="${borderClass} hover:bg-slate-50">
+                        <td class="p-3 font-medium">${item.noDpt}</td>
+                        <td class="p-3 font-semibold text-slate-900">${item.nama}</td>
+                        <td class="p-3">RT ${item.rtDomisili}</td>
+                        <td class="p-3">TPS ${item.tps}</td>
+                        <td class="p-3 text-slate-600">${item.nkk}</td>
+                        <td class="p-3 text-slate-600">${item.noUrutKk}</td>
+                        <td class="p-3 text-center space-x-2">
+                            <button onclick="editWarga('${item.id}')" class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteWarga('${item.id}')" class="text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderKPI() {
+            document.getElementById('kpi-total').innerText = filteredData.length;
+            document.getElementById('kpi-rt').innerText = new Set(filteredData.map(d => d.rtDomisili)).size;
+            document.getElementById('kpi-tps').innerText = new Set(filteredData.map(d => d.tps)).size;
+            document.getElementById('kpi-kk').innerText = new Set(filteredData.map(d => d.nkk)).size;
+        }
+
+        function renderRekapTPS() {
+            const tpsMap = {};
+            filteredData.forEach(d => {
+                if (!tpsMap[d.tps]) tpsMap[d.tps] = { total: 0, kks: new Set(), rts: new Set() };
+                tpsMap[d.tps].total++;
+                tpsMap[d.tps].kks.add(d.noUrutKk);
+                tpsMap[d.tps].rts.add(d.rtDomisili);
+            });
+
+            const tbody = document.getElementById('table-rekap-tps-body');
+            tbody.innerHTML = Object.keys(tpsMap).sort().map(tps => `
+                <tr class="border-b hover:bg-slate-50">
+                    <td class="p-3 font-bold">TPS ${tps}</td>
+                    <td class="p-3">${tpsMap[tps].total} Pemilih</td>
+                    <td class="p-3">${tpsMap[tps].kks.size} NO URUT KK Unik</td>
+                    <td class="p-3">${Array.from(tpsMap[tps].rts).join(', ')}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderRekapRT() {
+            const rtMap = {};
+            filteredData.forEach(d => {
+                if (!rtMap[d.rtDomisili]) rtMap[d.rtDomisili] = { total: 0, kks: new Set() };
+                rtMap[d.rtDomisili].total++;
+                rtMap[d.rtDomisili].kks.add(d.noUrutKk);
+            });
+
+            const tbody = document.getElementById('table-rekap-rt-body');
+            tbody.innerHTML = Object.keys(rtMap).sort().map(rt => `
+                <tr class="border-b hover:bg-slate-50">
+                    <td class="p-3 font-bold">RT ${rt}</td>
+                    <td class="p-3">${rtMap[rt].total} Pemilih</td>
+                    <td class="p-3">${rtMap[rt].kks.size} NO URUT KK Unik</td>
+                </tr>
+            `).join('');
+        }
+
+        function switchTab(tab) {
+            ['dashboard', 'rekap-tps', 'rekap-rt'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`nav-${t}`).classList.remove('sidebar-active', 'text-white');
+                document.getElementById(`nav-${t}`).classList.add('text-slate-400');
+            });
+
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
+            document.getElementById(`nav-${tab}`).classList.add('sidebar-active', 'text-white');
+            document.getElementById(`nav-${tab}`).classList.remove('text-slate-400');
+        }
+
+        function openModal(editData = null) {
+            document.getElementById('modal-form').classList.remove('hidden');
+            document.getElementById('modal-title').innerText = editData ? 'Edit Data Warga' : 'Tambah Data Warga';
+            document.getElementById('field-id').value = editData ? editData.id : '';
+            document.getElementById('field-noDpt').value = editData ? editData.noDpt : '';
+            document.getElementById('field-nama').value = editData ? editData.nama : '';
+            document.getElementById('field-rtDomisili').value = editData ? editData.rtDomisili : '';
+            document.getElementById('field-tps').value = editData ? editData.tps : '';
+            document.getElementById('field-nkk').value = editData ? editData.nkk : '';
+            document.getElementById('field-noUrutKk').value = editData ? editData.noUrutKk : '';
+        }
+
+        function closeModal() {
+            document.getElementById('modal-form').classList.add('hidden');
+            document.getElementById('warga-form').reset();
+        }
+
+        function editWarga(id) {
+            const item = rawData.find(d => String(d.id) === String(id));
+            if (item) openModal(item);
+        }
+
+        async function saveData(event) {
+            event.preventDefault();
+            const id = document.getElementById('field-id').value;
+            const action = id ? 'UPDATE' : 'CREATE';
+            
+            const payload = {
+                id: id,
+                noDpt: document.getElementById('field-noDpt').value,
+                nama: document.getElementById('field-nama').value,
+                rtDomisili: document.getElementById('field-rtDomisili').value,
+                tps: document.getElementById('field-tps').value,
+                nkk: document.getElementById('field-nkk').value,
+                noUrutKk: document.getElementById('field-noUrutKk').value
+            };
+
+            closeModal();
+            setStatus('Menyimpan Data...', 'text-amber-400');
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action, payload })
+                });
+                const result = await res.json();
+                if (result.status === 'success') {
+                    await fetchDataFromSheet();
+                } else {
+                    alert('Gagal menyimpan: ' + result.message);
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Gagal menghubungi server Google Apps Script.');
+            }
+        }
+
+        async function deleteWarga(id) {
+            if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) return;
+            setStatus('Menghapus Data...', 'text-amber-400');
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'DELETE', payload: { id } })
+                });
+                const result = await res.json();
+                if (result.status === 'success') {
+                    await fetchDataFromSheet();
+                } else {
+                    alert('Gagal menghapus: ' + result.message);
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Gagal menghubungi server.');
+            }
+        }
+    </script>
+</body>
+</html>
