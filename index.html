@@ -99,7 +99,7 @@
         /* Touch friendly Target Size untuk Layar HP */
         @media (max-width: 640px) {
             button, input, select {
-                min-height: 44px;
+                min-height: 40px;
             }
         }
     </style>
@@ -178,7 +178,7 @@
         </aside>
 
         <!-- Main Content Area -->
-        <main class="flex-1 overflow-y-auto p-3 sm:p-5 md:p-8 pb-20 md:pb-8">
+        <main class="flex-1 overflow-y-auto p-2 sm:p-5 md:p-8 pb-20 md:pb-8">
             
             <!-- TAB 1: DASHBOARD & DATA DPT -->
             <div id="tab-dashboard" class="space-y-4 md:space-y-6">
@@ -200,73 +200,70 @@
                 </div>
 
                 <!-- KPI Cards (Responsive 1/2/4 Grid) -->
-                <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-                    <div class="theme-glass p-3.5 sm:p-5 rounded-2xl shadow-sm relative overflow-hidden">
+                <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-4">
+                    <div class="theme-glass p-3 sm:p-5 rounded-2xl shadow-sm relative overflow-hidden">
                         <div class="text-[10px] sm:text-[11px] font-cyber uppercase tracking-wider" style="color: var(--text-muted);">Total DPT / Warga</div>
-                        <div id="kpi-total" class="text-2xl sm:text-3xl md:text-4xl font-extrabold mt-1 sm:mt-2 font-cyber" style="color: var(--text-main);">0</div>
-                        <div class="absolute -right-2 -bottom-2 sm:-right-4 sm:-bottom-4 opacity-10 text-4xl sm:text-5xl"><i class="fa-solid fa-users"></i></div>
+                        <div id="kpi-total" class="text-xl sm:text-3xl md:text-4xl font-extrabold mt-1 font-cyber" style="color: var(--text-main);">0</div>
+                        <div class="absolute -right-2 -bottom-2 opacity-10 text-4xl sm:text-5xl"><i class="fa-solid fa-users"></i></div>
                     </div>
-                    <div class="theme-glass p-3.5 sm:p-5 rounded-2xl shadow-sm relative overflow-hidden">
+                    <div class="theme-glass p-3 sm:p-5 rounded-2xl shadow-sm relative overflow-hidden">
                         <div class="text-[10px] sm:text-[11px] font-cyber uppercase tracking-wider" style="color: var(--text-muted);">RT Domisili</div>
-                        <div id="kpi-rt" class="text-2xl sm:text-3xl md:text-4xl font-extrabold mt-1 sm:mt-2 font-cyber" style="color: var(--accent-color);">0</div>
-                        <div class="absolute -right-2 -bottom-2 sm:-right-4 sm:-bottom-4 opacity-10 text-4xl sm:text-5xl"><i class="fa-solid fa-house-chimney"></i></div>
+                        <div id="kpi-rt" class="text-xl sm:text-3xl md:text-4xl font-extrabold mt-1 font-cyber" style="color: var(--accent-color);">0</div>
+                        <div class="absolute -right-2 -bottom-2 opacity-10 text-4xl sm:text-5xl"><i class="fa-solid fa-house-chimney"></i></div>
                     </div>
-                    <div class="theme-glass p-3.5 sm:p-5 rounded-2xl shadow-sm relative overflow-hidden">
+                    <div class="theme-glass p-3 sm:p-5 rounded-2xl shadow-sm relative overflow-hidden">
                         <div class="text-[10px] sm:text-[11px] font-cyber uppercase tracking-wider" style="color: var(--text-muted);">Jumlah TPS</div>
-                        <div id="kpi-tps" class="text-2xl sm:text-3xl md:text-4xl font-extrabold mt-1 sm:mt-2 font-cyber text-emerald-600">0</div>
-                        <div class="absolute -right-2 -bottom-2 sm:-right-4 sm:-bottom-4 opacity-10 text-4xl sm:text-5xl"><i class="fa-solid fa-box-archive"></i></div>
+                        <div id="kpi-tps" class="text-xl sm:text-3xl md:text-4xl font-extrabold mt-1 font-cyber text-emerald-600">0</div>
+                        <div class="absolute -right-2 -bottom-2 opacity-10 text-4xl sm:text-5xl"><i class="fa-solid fa-box-archive"></i></div>
                     </div>
-                    <div class="theme-glass p-3.5 sm:p-5 rounded-2xl shadow-sm relative overflow-hidden">
+                    <div class="theme-glass p-3 sm:p-5 rounded-2xl shadow-sm relative overflow-hidden">
                         <div class="text-[10px] sm:text-[11px] font-cyber uppercase tracking-wider" style="color: var(--text-muted);">Kepala Keluarga</div>
-                        <div id="kpi-kk" class="text-2xl sm:text-3xl md:text-4xl font-extrabold mt-1 sm:mt-2 font-cyber text-amber-600">0</div>
-                        <div class="absolute -right-2 -bottom-2 sm:-right-4 sm:-bottom-4 opacity-10 text-4xl sm:text-5xl"><i class="fa-solid fa-id-card"></i></div>
+                        <div id="kpi-kk" class="text-xl sm:text-3xl md:text-4xl font-extrabold mt-1 font-cyber text-amber-600">0</div>
+                        <div class="absolute -right-2 -bottom-2 opacity-10 text-4xl sm:text-5xl"><i class="fa-solid fa-id-card"></i></div>
                     </div>
                 </div>
 
-                <!-- Filters Section (Fluid Mobile layout) -->
-                <div class="theme-glass p-3.5 rounded-2xl shadow-xl flex flex-col sm:flex-row flex-wrap gap-2.5 items-stretch sm:items-center">
-                    <!-- Pencarian Nama / NKK / No DPT -->
-                    <div class="relative flex-1 w-full sm:w-auto min-w-[180px]">
+                <!-- Filters Section -->
+                <div class="theme-glass p-3 rounded-2xl shadow-xl flex flex-col sm:flex-row flex-wrap gap-2 items-stretch sm:items-center">
+                    <div class="relative flex-1 w-full sm:w-auto min-w-[150px]">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
                             <i class="fa-solid fa-magnifying-glass text-xs"></i>
                         </span>
-                        <input type="text" id="search-input" oninput="applyFilters()" placeholder="Cari Nama, NKK, No DPT..." class="w-full pl-9 pr-3 py-2 rounded-xl text-xs md:text-sm focus:outline-none transition" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
+                        <input type="text" id="search-input" oninput="applyFilters()" placeholder="Cari Nama/NKK..." class="w-full pl-9 pr-3 py-2 rounded-xl text-xs md:text-sm focus:outline-none transition" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
                     </div>
                     
                     <div class="grid grid-cols-2 sm:flex gap-2 w-full sm:w-auto">
-                        <select id="filter-rt" onchange="applyFilters()" class="w-full sm:w-auto px-3 py-2 rounded-xl text-xs md:text-sm focus:outline-none transition cursor-pointer" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
+                        <select id="filter-rt" onchange="applyFilters()" class="w-full sm:w-auto px-2.5 py-2 rounded-xl text-xs md:text-sm focus:outline-none transition cursor-pointer" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
                             <option value="">Semua RT</option>
                         </select>
 
-                        <select id="filter-tps" onchange="applyFilters()" class="w-full sm:w-auto px-3 py-2 rounded-xl text-xs md:text-sm focus:outline-none transition cursor-pointer" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
+                        <select id="filter-tps" onchange="applyFilters()" class="w-full sm:w-auto px-2.5 py-2 rounded-xl text-xs md:text-sm focus:outline-none transition cursor-pointer" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
                             <option value="">Semua TPS</option>
                         </select>
                     </div>
 
-                    <!-- Pencarian Manual No Urut KK -->
-                    <div class="relative w-full sm:w-auto min-w-[150px]">
+                    <div class="relative w-full sm:w-auto min-w-[130px]">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
                             <i class="fa-solid fa-arrow-down-1-9 text-xs"></i>
                         </span>
-                        <input type="text" id="filter-no-urut-kk-input" oninput="applyFilters()" placeholder="Cari No Urut KK..." class="w-full pl-9 pr-3 py-2 rounded-xl text-xs md:text-sm focus:outline-none transition" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
+                        <input type="text" id="filter-no-urut-kk-input" oninput="applyFilters()" placeholder="No Urut KK" class="w-full pl-9 pr-3 py-2 rounded-xl text-xs md:text-sm focus:outline-none transition" style="background-color: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color);">
                     </div>
 
-                    <button onclick="resetFilters()" class="w-full sm:w-auto text-xs font-semibold py-2 px-3 rounded-xl transition text-center hover:underline" style="color: var(--accent-color);">Reset Filter</button>
+                    <button onclick="resetFilters()" class="w-full sm:w-auto text-xs font-semibold py-1.5 px-3 rounded-xl transition text-center hover:underline" style="color: var(--accent-color);">Reset</button>
                 </div>
 
-                <!-- Table Data -->
+                <!-- Table Data (Dioptimalkan agar pas di layar HP tanpa geser samping) -->
                 <div class="theme-glass rounded-2xl shadow-xl overflow-hidden border">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs md:text-sm whitespace-nowrap">
-                            <thead class="uppercase text-[10px] md:text-[11px] font-cyber tracking-wider" style="background-color: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border-color); color: var(--text-muted);">
+                    <div class="w-full overflow-x-auto sm:overflow-x-visible">
+                        <table class="w-full text-left text-[11px] sm:text-sm">
+                            <thead class="uppercase text-[9px] sm:text-[11px] font-cyber tracking-wider" style="background-color: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border-color); color: var(--text-muted);">
                                 <tr>
-                                    <th class="p-3 md:p-3.5">NO. DPT</th>
-                                    <th class="p-3 md:p-3.5">NAMA</th>
-                                    <th class="p-3 md:p-3.5">RT DOMISILI</th>
-                                    <th class="p-3 md:p-3.5">TPS</th>
-                                    <th class="p-3 md:p-3.5">NKK</th>
-                                    <th class="p-3 md:p-3.5">NO URUT KK</th>
-                                    <th class="p-3 md:p-3.5 text-center">AKSI</th>
+                                    <th class="p-2 sm:p-3.5 w-10">No</th>
+                                    <th class="p-2 sm:p-3.5">Warga / DPT</th>
+                                    <th class="p-2 sm:p-3.5 text-center">RT/TPS</th>
+                                    <th class="p-2 sm:p-3.5 hidden sm:table-cell">NKK</th>
+                                    <th class="p-2 sm:p-3.5 text-center">Urut KK</th>
+                                    <th class="p-2 sm:p-3.5 text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="table-body" class="divide-y" style="border-color: var(--border-color);">
@@ -280,15 +277,15 @@
             <!-- TAB 2: REKAPITULASI TPS -->
             <div id="tab-rekap-tps" class="space-y-4 md:space-y-6 hidden">
                 <h1 class="text-xl sm:text-2xl md:text-3xl font-bold font-cyber" style="color: var(--text-main);">Rekapitulasi TPS</h1>
-                <div class="theme-glass rounded-2xl shadow-xl overflow-hidden p-3 md:p-4 border">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs md:text-sm whitespace-nowrap">
-                            <thead class="uppercase text-[10px] md:text-[11px] font-cyber tracking-wider" style="color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                <div class="theme-glass rounded-2xl shadow-xl overflow-hidden p-2 sm:p-4 border">
+                    <div class="w-full overflow-x-auto sm:overflow-x-visible">
+                        <table class="w-full text-left text-xs sm:text-sm">
+                            <thead class="uppercase text-[10px] sm:text-[11px] font-cyber tracking-wider" style="color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
                                 <tr>
-                                    <th class="p-3 md:p-3.5">TPS</th>
-                                    <th class="p-3 md:p-3.5">JUMLAH PEMILIH</th>
-                                    <th class="p-3 md:p-3.5">NO URUT KK UNIK</th>
-                                    <th class="p-3 md:p-3.5">RT TERLIBAT</th>
+                                    <th class="p-2.5 sm:p-3.5">TPS</th>
+                                    <th class="p-2.5 sm:p-3.5">Pemilih</th>
+                                    <th class="p-2.5 sm:p-3.5">KK Unik</th>
+                                    <th class="p-2.5 sm:p-3.5">RT</th>
                                 </tr>
                             </thead>
                             <tbody id="table-rekap-tps-body" class="divide-y" style="border-color: var(--border-color);">
@@ -302,14 +299,14 @@
             <!-- TAB 3: WILAYAH & REKAP RT -->
             <div id="tab-rekap-rt" class="space-y-4 md:space-y-6 hidden">
                 <h1 class="text-xl sm:text-2xl md:text-3xl font-bold font-cyber" style="color: var(--text-main);">Rekapitulasi RT Domisili</h1>
-                <div class="theme-glass rounded-2xl shadow-xl overflow-hidden p-3 md:p-4 border">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs md:text-sm whitespace-nowrap">
-                            <thead class="uppercase text-[10px] md:text-[11px] font-cyber tracking-wider" style="color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                <div class="theme-glass rounded-2xl shadow-xl overflow-hidden p-2 sm:p-4 border">
+                    <div class="w-full overflow-x-auto sm:overflow-x-visible">
+                        <table class="w-full text-left text-xs sm:text-sm">
+                            <thead class="uppercase text-[10px] sm:text-[11px] font-cyber tracking-wider" style="color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
                                 <tr>
-                                    <th class="p-3 md:p-3.5">RT DOMISILI</th>
-                                    <th class="p-3 md:p-3.5">JUMLAH PEMILIH</th>
-                                    <th class="p-3 md:p-3.5">NO URUT KK UNIK</th>
+                                    <th class="p-2.5 sm:p-3.5">RT</th>
+                                    <th class="p-2.5 sm:p-3.5">Jumlah Pemilih</th>
+                                    <th class="p-2.5 sm:p-3.5">No Urut KK Unik</th>
                                 </tr>
                             </thead>
                             <tbody id="table-rekap-rt-body" class="divide-y" style="border-color: var(--border-color);">
@@ -323,7 +320,7 @@
         </main>
     </div>
 
-    <!-- Modal Form Tambah/Edit Warga (Touch-optimized) -->
+    <!-- Modal Form Tambah/Edit Warga -->
     <div id="modal-form" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
         <div class="theme-glass rounded-t-3xl sm:rounded-2xl w-full max-w-md p-5 sm:p-6 space-y-4 border shadow-2xl max-h-[90vh] overflow-y-auto" style="background-color: var(--bg-surface);">
             <div class="flex justify-between items-center pb-2 border-b border-white/10">
@@ -445,7 +442,6 @@
                 }
             } catch (err) {
                 console.error(err);
-                // Fallback mock data jika offline atau error
                 rawData = [
                     { id: '1', noDpt: '001', nama: 'Budi Santoso', rtDomisili: '01', tps: '02', nkk: '32010101', noUrutKk: '1' },
                     { id: '2', noDpt: '002', nama: 'Siti Aminah', rtDomisili: '01', tps: '02', nkk: '32010101', noUrutKk: '02' },
@@ -485,15 +481,12 @@
                 const matchRt = !rt || String(item.rtDomisili) === rt;
                 const matchTps = !tps || String(item.tps) === tps;
 
-                // Logika Pencarian Angka Presisi untuk No Urut KK (satuan, puluhan, ratusan, ribuan)
                 let matchNoUrutKk = true;
                 if (noUrutKkSearch !== '') {
                     const itemValueStr = String(item.noUrutKk).trim();
                     const itemValueNum = parseInt(itemValueStr, 10);
                     const searchValueNum = parseInt(noUrutKkSearch, 10);
 
-                    // Cocokkan jika nilai numerik sama (misal 5 == 05 == 005) 
-                    // ATAU jika pencarian karakter string cocok persis/bagian darinya
                     const isNumEqual = !isNaN(itemValueNum) && !isNaN(searchValueNum) && itemValueNum === searchValueNum;
                     const isStringIncluded = itemValueStr.toLowerCase().includes(noUrutKkSearch.toLowerCase());
 
@@ -525,26 +518,30 @@
         function renderTable() {
             const tbody = document.getElementById('table-body');
             if (filteredData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">Tidak ada data ditemukan.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400">Tidak ada data ditemukan.</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = filteredData.map((item, idx) => {
-                // Beri garis pembatas tebal jika NKK berbeda dengan baris berikutnya
                 const isGroupEnd = idx < filteredData.length - 1 && filteredData[idx + 1].nkk !== item.nkk;
                 const borderClass = isGroupEnd ? 'border-kk-group' : '';
 
                 return `
                     <tr class="${borderClass} transition hover:bg-white/5">
-                        <td class="p-3 md:p-3.5 font-medium font-cyber">${item.noDpt}</td>
-                        <td class="p-3 md:p-3.5 font-semibold" style="color: var(--text-main);">${item.nama}</td>
-                        <td class="p-3 md:p-3.5">RT ${item.rtDomisili}</td>
-                        <td class="p-3 md:p-3.5">TPS ${item.tps}</td>
-                        <td class="p-3 md:p-3.5" style="color: var(--text-muted);">${item.nkk}</td>
-                        <td class="p-3 md:p-3.5" style="color: var(--text-muted);">${item.noUrutKk}</td>
-                        <td class="p-3 md:p-3.5 text-center space-x-2">
-                            <button onclick="editWarga('${item.id}')" class="p-1.5 transition hover:opacity-75" style="color: var(--accent-color);" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteWarga('${item.id}')" class="p-1.5 text-red-400 hover:text-red-600 transition" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                        <td class="p-2 sm:p-3.5 text-slate-400 font-cyber">${item.noDpt}</td>
+                        <td class="p-2 sm:p-3.5">
+                            <div class="font-semibold break-words" style="color: var(--text-main);">${item.nama}</div>
+                            <div class="text-[10px] sm:hidden" style="color: var(--text-muted);">NKK: ${item.nkk}</div>
+                        </td>
+                        <td class="p-2 sm:p-3.5 text-center">
+                            <span class="inline-block px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-500 font-medium">RT ${item.rtDomisili}</span>
+                            <span class="inline-block px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-500 font-medium">TPS ${item.tps}</span>
+                        </td>
+                        <td class="p-2 sm:p-3.5 hidden sm:table-cell" style="color: var(--text-muted);">${item.nkk}</td>
+                        <td class="p-2 sm:p-3.5 text-center font-medium font-cyber" style="color: var(--text-main);">${item.noUrutKk}</td>
+                        <td class="p-2 sm:p-3.5 text-center space-x-1">
+                            <button onclick="editWarga('${item.id}')" class="p-1.5 transition hover:opacity-75" style="color: var(--accent-color);" title="Edit"><i class="fa-solid fa-pen text-xs"></i></button>
+                            <button onclick="deleteWarga('${item.id}')" class="p-1.5 text-red-400 hover:text-red-600 transition" title="Hapus"><i class="fa-solid fa-trash text-xs"></i></button>
                         </td>
                     </tr>
                 `;
@@ -570,10 +567,10 @@
             const tbody = document.getElementById('table-rekap-tps-body');
             tbody.innerHTML = Object.keys(tpsMap).sort().map(tps => `
                 <tr class="transition hover:bg-white/5" style="border-color: var(--border-color);">
-                    <td class="p-3 md:p-3.5 font-bold font-cyber">TPS ${tps}</td>
-                    <td class="p-3 md:p-3.5">${tpsMap[tps].total} Pemilih</td>
-                    <td class="p-3 md:p-3.5">${tpsMap[tps].kks.size} NO URUT KK Unik</td>
-                    <td class="p-3 md:p-3.5">${Array.from(tpsMap[tps].rts).join(', ')}</td>
+                    <td class="p-2.5 sm:p-3.5 font-bold font-cyber">TPS ${tps}</td>
+                    <td class="p-2.5 sm:p-3.5">${tpsMap[tps].total}</td>
+                    <td class="p-2.5 sm:p-3.5">${tpsMap[tps].kks.size} KK</td>
+                    <td class="p-2.5 sm:p-3.5 text-xs" style="color: var(--text-muted);">${Array.from(tpsMap[tps].rts).join(', ')}</td>
                 </tr>
             `).join('');
         }
@@ -589,9 +586,9 @@
             const tbody = document.getElementById('table-rekap-rt-body');
             tbody.innerHTML = Object.keys(rtMap).sort().map(rt => `
                 <tr class="transition hover:bg-white/5" style="border-color: var(--border-color);">
-                    <td class="p-3 md:p-3.5 font-bold font-cyber">RT ${rt}</td>
-                    <td class="p-3 md:p-3.5">${rtMap[rt].total} Pemilih</td>
-                    <td class="p-3 md:p-3.5">${rtMap[rt].kks.size} NO URUT KK Unik</td>
+                    <td class="p-2.5 sm:p-3.5 font-bold font-cyber">RT ${rt}</td>
+                    <td class="p-2.5 sm:p-3.5">${rtMap[rt].total} Pemilih</td>
+                    <td class="p-2.5 sm:p-3.5">${rtMap[rt].kks.size} KK Unik</td>
                 </tr>
             `).join('');
         }
@@ -610,7 +607,6 @@
             activeNav.classList.add('sidebar-active');
             activeNav.style.color = '#ffffff';
             
-            // Otomatis tutup laci navigasi sidebar pada perangkat mobile saat memilih menu
             if (window.innerWidth < 768) {
                 const sidebar = document.getElementById('sidebar');
                 const backdrop = document.getElementById('sidebar-backdrop');
